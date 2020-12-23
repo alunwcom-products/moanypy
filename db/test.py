@@ -1,5 +1,6 @@
-import mariadb
 import uuid
+
+import mariadb
 
 
 # Create Connection Pool

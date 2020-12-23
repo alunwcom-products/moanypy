@@ -1,5 +1,3 @@
-import uuid
-
 import mariadb
 
 
@@ -36,14 +34,6 @@ def remove_transactions_by_account(_cur, _account):
 
 if __name__ == "__main__":
     try:
-        # Instantiate Connection
-        # conn = mariadb.connect(
-        #     database="moany",
-        #     user="moany",
-        #     password="password",
-        #     host="localhost",
-        #     port=3306,
-        #     autocommit=False)
 
         pool = create_connection_pool()
         conn = pool.get_connection()
@@ -55,16 +45,29 @@ if __name__ == "__main__":
         transactions = []
 
         # Retrieve Contacts
-        cur.execute("SELECT trans_date, description FROM transactions ORDER BY trans_date DESC LIMIT 0,25")
+        cur.execute(
+            "SELECT "
+            "uuid, "
+            "statement_amount, "
+            "description, "
+            "comment, "
+            "entry_date, "
+            "source_name, "
+            "source_row, "
+            "source_type "
+            "FROM transactions ORDER BY entry_date DESC")
 
         # Prepare Contacts
-        for (trans_date, description) in cur:
-            transactions.append(f"{trans_date} {description}")
+        for (row) in cur:
+            # transactions.append(f"{row[0]} {row[4]} {row[7]}")
+            timestamp = row[4]
+            if timestamp:
+                print(f'date = {timestamp.strftime("%b %d %Y %H:%M:%S")}')
 
         # List Contacts
-        print("\n".join(transactions))
+        # print("\n".join(transactions))
 
-        add_transaction(cur, str(uuid.uuid4()))
+        # add_transaction(cur, str(uuid.uuid4()))
 
         # remove_transactions_by_account(cur, "none")
 

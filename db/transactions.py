@@ -1,24 +1,12 @@
 import mariadb
 
-pool = mariadb.ConnectionPool(
-    database="moany",
-    user="moany",
-    password="password",
-    host="localhost",
-    port=3306,
-    autocommit=False,
-    pool_name="web-app",
-    pool_size=20
-)
 
-
-def get_transaction():
+def get_transaction(conn):
     transactions = []
     try:
-        conn = pool.get_connection()
         cursor = conn.cursor()
 
-        cursor.execute("SELECT trans_date, description FROM transactions ORDER BY trans_date DESC LIMIT 0,25")
+        cursor.execute("SELECT trans_date, description FROM transactions ORDER BY trans_date DESC")
         for (trans_date, description) in cursor:
             transactions.append(f"{trans_date} {description}")
 

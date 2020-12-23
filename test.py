@@ -54,15 +54,25 @@ if __name__ == "__main__":
             "entry_date, "
             "source_name, "
             "source_row, "
-            "source_type "
-            "FROM transactions ORDER BY entry_date DESC")
+            "source_type, "
+            "trans_date "
+            "FROM transactions ORDER BY trans_date DESC")
 
         # Prepare Contacts
         for (row) in cur:
             # transactions.append(f"{row[0]} {row[4]} {row[7]}")
-            timestamp = row[4]
-            if timestamp:
-                print(f'date = {timestamp.strftime("%b %d %Y %H:%M:%S")}')
+
+            if row[4]:
+                entry_date = row[4].strftime("%Y-%m-%dT%H:%M:%SZ")
+            else:
+                entry_date = "<empty>"
+
+            if row[8]:
+                trans_date = row[8].strftime("%d %b %Y")
+            else:
+                trans_date = "<empty>"
+
+            print(f'{entry_date} [{trans_date}] {row}')
 
         # List Contacts
         # print("\n".join(transactions))

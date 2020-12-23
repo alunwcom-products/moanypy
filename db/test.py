@@ -7,7 +7,7 @@ def create_connection_pool():
     """Creates and returns a Connection Pool"""
 
     # Create Connection Pool
-    pool = mariadb.ConnectionPool(
+    _pool = mariadb.ConnectionPool(
         database="moany",
         user="moany",
         password="password",
@@ -19,17 +19,18 @@ def create_connection_pool():
     )
 
     # Return Connection Pool
-    return pool
+    return _pool
 
 
 # Adds account
-def add_account(_cur, _uuid):
-    """
-    Adds the given account to the accounts table
-    """
-
+def add_transaction(_cur, _uuid):
     print(f'uuid = {_uuid}')
     _cur.execute("INSERT INTO transactions(uuid, account) VALUES (?, ?)", (_uuid, "none"))
+
+
+# Remove Contact from Database
+def remove_transactions_by_account(_cur, _account):
+    cur.execute("DELETE FROM transactions WHERE account = ?", (_account,))
 
 
 if __name__ == "__main__":
@@ -62,7 +63,9 @@ if __name__ == "__main__":
         # List Contacts
         print("\n".join(transactions))
 
-        add_account(cur, str(uuid.uuid4()))
+        add_transaction(cur, str(uuid.uuid4()))
+
+        # remove_transactions_by_account(cur, "none")
 
         conn.commit()
 
@@ -71,6 +74,7 @@ if __name__ == "__main__":
 
     except mariadb.Error as e:
         print(f"Error connecting to MariaDB Platform: {e}")
+
         conn.rollback()
 
         # sys.exit(1)

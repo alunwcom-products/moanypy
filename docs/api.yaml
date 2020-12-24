@@ -37,10 +37,24 @@ paths:
       - transactions
       security:
         - bearerJWTAuth: []
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: 'The number of items to skip before starting to collect the result set.'
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: 'The numbers of items to return.'
       responses:
         200:
           description: ""
-          content: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionList'
     delete:
       tags:
       - transactions
@@ -50,6 +64,10 @@ paths:
         200:
           description: ""
           content: {}
+
+
+
+
 
 components:
   securitySchemes:
@@ -147,3 +165,17 @@ components:
         - netAmount
         - accountBalance
         - account
+    TransactionList:
+      type: object
+      description: 'Transaction properties from data store.'
+      properties:
+        count:
+          type: integer
+          format: int32
+        resultsPerPage:
+          type: integer
+          format: int32
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionOutput'

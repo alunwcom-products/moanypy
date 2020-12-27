@@ -9,7 +9,7 @@ if __name__ == "__main__":
 
     accounts = db.get_accounts(db.get_connection())
     for account in accounts:
-        transactions = db.get_transactions_by_account(db.get_connection(), account['uuid'])
+        transactions = db.get_transactions_by_account(db.get_connection(), account['id'])
         print(f'Account: {account["name"]}, total transactions = {len(transactions)}')
 
         display_count = 5

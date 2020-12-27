@@ -17,11 +17,16 @@ std_columns = {
 }
 
 
-def get_transactions(conn):
+def get_transactions(conn, offset=0, limit=25):
     transactions = []
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT " + ",".join(std_columns.keys()) + " FROM transactions ORDER BY trans_date DESC")
+        # get count
+        cursor.execute("SELECT count(*) FROM transactions")
+        count = next(cursor)[0]
+        print(f'count = {count}')
+
+        cursor.execute("SELECT " + ",".join(std_columns.keys()) + " FROM transactions ORDER BY trans_date DESC LIMIT " + str(offset) + "," + str(limit))
         num_fields = len(cursor.description)
         field_names = [i[0] for i in cursor.description]
 

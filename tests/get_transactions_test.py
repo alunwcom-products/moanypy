@@ -7,10 +7,9 @@ if __name__ == "__main__":
         password="password"
     )
 
-    results = db.get_transactions(db.get_connection())
+    results = db.get_transactions(db.get_connection(), 0)
 
-    # list first 5 transactions
-    for i in range(5):
-        print(results[i])
+    for t in results:
+        print(t)
 
-    print(f'count = {len(results)}')
+    print(f'results = {len(results)}')

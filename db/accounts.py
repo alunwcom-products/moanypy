@@ -1,28 +1,29 @@
+import collections
+
 import mariadb
 
-# mapping database columns to property names
-std_columns = {
-    'uuid': 'id',
-    'account_num': 'number',
-    'name': 'name',
-    'type': 'type',
-    'starting_balance': 'starting_balance'
-}
+# Account tuple
+Account = collections.namedtuple('Account', 'id, number, name, type, starting_balance')
+
+# mapping database columns to Account namedtuple
+account_column_mapping = 'uuid, account_num, name, type, starting_balance '
 
 
 def get_accounts(conn):
+    """
+    Get (all) accounts - ordered by name ascending.
+
+    :param conn:
+    :return: list of Account tuples
+    """
     accounts = []
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT " + ",".join(std_columns.keys()) + " FROM accounts ORDER BY name ASC")
-        num_fields = len(cursor.description)
-        field_names = [i[0] for i in cursor.description]
-
-        for (row) in cursor:
-            account = {}
-            for i in range(num_fields):
-                account[std_columns[field_names[i]]] = row[i]
-            accounts.append(account)
+        cursor.execute(
+            "SELECT " +
+            account_column_mapping +
+            "FROM accounts ORDER BY name ASC")
+        accounts = list(map(Account._make, cursor.fetchall()))
 
     except mariadb.Error as e:
         print(f"Error connecting to MariaDB Platform: {e}")

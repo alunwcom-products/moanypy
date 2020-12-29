@@ -9,6 +9,6 @@ if __name__ == "__main__":
     results = db.get_accounts(db.get_connection())
 
     for account in results:
-        print(account)
+        print(f'{account.id:<36} | {account.number:<20} | {account.name:<20} | {account.type:<6} | {account.starting_balance:>10}')
 
     print(f'count = {len(results)}')

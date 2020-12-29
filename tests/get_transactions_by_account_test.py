@@ -9,14 +9,24 @@ if __name__ == "__main__":
 
     accounts = db.get_accounts(db.get_connection())
     for account in accounts:
-        transactions = db.get_transactions_by_account(db.get_connection(), account['id'])
-        print(f'Account: {account["name"]}, total transactions = {len(transactions)}')
+        results = db.get_transactions_by_account(db.get_connection(), account.id, 0, 5)
+        print(f'Account: {account.name}, total transactions = {len(results.transactions)}')
 
-        display_count = 5
-        if len(transactions) < display_count:
-            display_count = len(transactions)
+        # display_count = 5
+        # if len(transactions) < display_count:
+        #     display_count = len(transactions)
 
-        for i in range(display_count):
-            print(transactions[i])
+        total_amount = 0
+        balance = 0
+        for i, t in enumerate(results.transactions):
+            if i == 0:
+                balance = t.account_balance
+            else:
+                balance += t.net_amount
+            total_amount += t.net_amount
+            # print(f'{t}')
+            print(
+                f'{t.trans_date} [{t.source_row}] {t.net_amount:>9} {balance:>9} [{t.account_balance:>9}]')
 
+        print(f'Sub-total = {total_amount}')
         print(' ')

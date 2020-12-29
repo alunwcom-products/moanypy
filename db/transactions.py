@@ -1,40 +1,30 @@
 import mariadb
+import collections
 
-std_columns = {
-    'uuid': 'id',
-    'trans_date': 'trans_date',
-    'entry_date': 'entry_date',
-    'type': 'type',
-    'description': 'description',
-    'source_type': 'source_type',
-    'source_name': 'source_name',
-    'source_row': 'source_row',
-    'statement_amount': 'statement_amount',
-    'net_amount': 'net_amount',
-    'statement_balance': 'statement_balance',
-    'account_balance': 'account_balance',
-    'account': 'account_id'
-}
+# Transaction tuple
+Transaction = collections.namedtuple('Transaction', 'id, trans_date, entry_date, type, description, source_type,'
+                                                    'source_name, source_row, statement_amount, net_amount,'
+                                                    'statement_balance, account_balance, account_id')
+
+PagedTransactions = collections.namedtuple('PagedTransactions', 'total, offset, limit, transactions')
+
+# mapping database columns to Transaction namedtuple
+transaction_column_mapping = 'uuid, trans_date, entry_date, type, description, source_type, source_name, source_row, ' \
+                         'statement_amount, net_amount, statement_balance, account_balance, account '
 
 
 def get_transactions(conn, offset=0, limit=25):
+    count = 0
     transactions = []
     try:
         cursor = conn.cursor()
         # get count
         cursor.execute("SELECT count(*) FROM transactions")
         count = next(cursor)[0]
-        print(f'count = {count}')
-
-        cursor.execute("SELECT " + ",".join(std_columns.keys()) + " FROM transactions ORDER BY trans_date DESC LIMIT " + str(offset) + "," + str(limit))
-        num_fields = len(cursor.description)
-        field_names = [i[0] for i in cursor.description]
-
-        for (row) in cursor:
-            transaction = {}
-            for i in range(num_fields):
-                transaction[std_columns[field_names[i]]] = row[i]
-            transactions.append(transaction)
+        # get paginated transactions
+        cursor.execute("SELECT " + transaction_column_mapping +
+                       "FROM transactions ORDER BY trans_date DESC LIMIT " + str(offset) + "," + str(limit))
+        transactions = list(map(Transaction._make, cursor.fetchall()))
 
     except mariadb.Error as e:
         print(f"Error connecting to MariaDB Platform: {e}")
@@ -42,25 +32,24 @@ def get_transactions(conn, offset=0, limit=25):
     finally:
         conn.close()
 
-    return transactions
+    return PagedTransactions(count, offset, limit, transactions)
 
 
-def get_transactions_by_account(conn, account):
+def get_transactions_by_account(conn, account, offset=0, limit=25):
+    count = 0
     transactions = []
     try:
         cursor = conn.cursor()
+        # get count
+        cursor.execute("SELECT count(*) FROM transactions WHERE account = '" + account + "' ")
+        count = next(cursor)[0]
+        # get paginated transactions
         cursor.execute(
-            "SELECT " + ",".join(std_columns.keys()) + " FROM transactions "
+            "SELECT " + transaction_column_mapping +
+            "FROM transactions "
             "WHERE account = '" + account + "' "
-            "ORDER BY trans_date DESC")
-        num_fields = len(cursor.description)
-        field_names = [i[0] for i in cursor.description]
-
-        for (row) in cursor:
-            transaction = {}
-            for i in range(num_fields):
-                transaction[std_columns[field_names[i]]] = row[i]
-            transactions.append(transaction)
+            "ORDER BY trans_date ASC, source_row ASC LIMIT " + str(offset) + "," + str(limit))
+        transactions = list(map(Transaction._make, cursor.fetchall()))
 
     except mariadb.Error as e:
         print(f"Error connecting to MariaDB Platform: {e}")
@@ -68,4 +57,4 @@ def get_transactions_by_account(conn, account):
     finally:
         conn.close()
 
-    return transactions
+    return PagedTransactions(count, offset, limit, transactions)

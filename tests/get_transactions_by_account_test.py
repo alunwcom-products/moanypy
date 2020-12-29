@@ -12,9 +12,8 @@ if __name__ == "__main__":
         results = db.get_transactions_by_account(db.get_connection(), account.id, 0, 5)
         print(f'Account: {account.name}, total transactions = {len(results.transactions)}')
 
-        # display_count = 5
-        # if len(transactions) < display_count:
-        #     display_count = len(transactions)
+        # for t in results.transactions:
+        #     print(t)
 
         total_amount = 0
         balance = 0
@@ -23,6 +22,7 @@ if __name__ == "__main__":
                 balance = t.account_balance
             else:
                 balance += t.net_amount
+
             total_amount += t.net_amount
             # print(f'{t}')
             print(

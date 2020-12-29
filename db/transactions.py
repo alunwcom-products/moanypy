@@ -2,15 +2,16 @@ import mariadb
 import collections
 
 # Transaction tuple
-Transaction = collections.namedtuple('Transaction', 'id, trans_date, entry_date, type, description, source_type,'
-                                                    'source_name, source_row, statement_amount, net_amount,'
-                                                    'statement_balance, account_balance, account_id')
+Transaction = collections.namedtuple('Transaction', 'id, trans_date, entry_date, type, description, comment,'
+                                                    'source_type,source_name, source_row, statement_amount, net_amount,'
+                                                    'statement_balance, account_balance, account_id, category_id')
 
 PagedTransactions = collections.namedtuple('PagedTransactions', 'total, offset, limit, transactions')
 
 # mapping database columns to Transaction namedtuple
-transaction_column_mapping = 'uuid, trans_date, entry_date, type, description, source_type, source_name, source_row, ' \
-                         'statement_amount, net_amount, statement_balance, account_balance, account '
+transaction_column_mapping = 'uuid, trans_date, entry_date, type, description, comment, source_type, source_name, ' \
+                             'source_row, statement_amount, net_amount, statement_balance, account_balance, account, ' \
+                             'category '
 
 
 def get_transactions(conn, offset=0, limit=25):

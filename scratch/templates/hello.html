@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello from Flask</title>
+    <link rel="stylesheet" href="/static/style.css" type="text/css" />
+</head>
+<body>
+
+<h1>Hello from Flask</h1>
+{% if name %}
+  <h2>Hello {{ name }}!</h2>
+{% else %}
+  <h2>Hello, World!</h2>
+{% endif %}
+
+<form action="/login/" method="post">
+    <input name="username" type="text" />
+    <input name="password" type="password" />
+    <input type="submit" value="Post" />
+</form>
+
+</body>
+</html>

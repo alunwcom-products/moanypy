@@ -18,12 +18,13 @@ def get_accounts(conn):
     """
     accounts = []
     try:
-        cursor = conn.cursor()
+        cursor = conn.cursor(named_tuple=True)
         cursor.execute(
             "SELECT " +
             account_column_mapping +
             "FROM accounts ORDER BY name ASC")
-        accounts = list(map(Account._make, cursor.fetchall()))
+
+        accounts = cursor.fetchall()
 
     except mariadb.Error as e:
         print(f"Error connecting to MariaDB Platform: {e}")

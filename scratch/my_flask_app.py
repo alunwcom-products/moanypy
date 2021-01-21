@@ -1,4 +1,4 @@
-from flask import Flask, url_for, render_template, request, make_response, abort, redirect
+from flask import Flask, url_for, render_template, request, make_response, abort, redirect, jsonify
 from markupsafe import escape, Markup
 
 app = Flask(__name__)
@@ -38,8 +38,11 @@ def show_user_profile(username):
 
 @app.route('/post/<int:post_id>')
 def show_post(post_id):
+
+    result = {'post': post_id}
+
     # show the post with the given id, the id is an integer
-    return 'Post %d' % post_id
+    return jsonify(result)
 
 
 @app.route('/account/<uuid:acc_id>', methods=['GET', 'PUT', 'DELETE'])

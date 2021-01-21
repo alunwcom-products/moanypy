@@ -53,7 +53,7 @@ def get_transactions(
         count = next(cursor)[0]
         # get paginated transactions
         cursor.execute("SELECT " + transaction_column_mapping + query +
-                       "ORDER BY trans_date DESC LIMIT " + str(offset) + "," + str(limit))
+                       "ORDER BY trans_date ASC, source_row ASC LIMIT " + str(offset) + "," + str(limit))
         transactions = list(map(Transaction._make, cursor.fetchall()))
 
     except mariadb.Error as e:

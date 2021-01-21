@@ -1,9 +1,9 @@
 import collections
 
-import mariadb
+import mysql.connector
 
 # Account tuple
-Account = collections.namedtuple('Account', 'id, number, name, type, starting_balance')
+# Account = collections.namedtuple('Account', 'id, number, name, type, starting_balance')
 
 # mapping database columns to Account namedtuple
 account_column_mapping = 'uuid, account_num, name, type, starting_balance '
@@ -26,8 +26,8 @@ def get_accounts(conn):
 
         accounts = cursor.fetchall()
 
-    except mariadb.Error as e:
-        print(f"Error connecting to MariaDB Platform: {e}")
+    except mysql.connector.Error as e:
+        print(f"Error connecting to database: {e}")
 
     finally:
         conn.close()

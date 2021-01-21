@@ -1,6 +1,7 @@
 import db
 
-if __name__ == "__main__":
+
+def test_transactions_by_account():
     db.database_connection(
         database="moany",
         user="moany",
@@ -9,7 +10,7 @@ if __name__ == "__main__":
 
     accounts = db.get_accounts(db.get_connection())
     for account in accounts:
-        results = db.get_transactions(db.get_connection(), [account.id], offset=0, limit=5)
+        results = db.get_transactions(db.get_connection(), [account.uuid], offset=0, limit=5)
         print(f'Account: {account.name}, total transactions = {len(results.transactions)}')
 
         for t in results.transactions:
@@ -35,3 +36,5 @@ if __name__ == "__main__":
 
         print(f'Sub-total = {total_amount}')
         print(' ')
+
+        assert True

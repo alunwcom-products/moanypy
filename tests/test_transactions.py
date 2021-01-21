@@ -1,6 +1,8 @@
 import db
 
-if __name__ == "__main__":
+
+def test_get_transactions():
+
     db.database_connection(
         database="moany",
         user="moany",
@@ -19,6 +21,9 @@ if __name__ == "__main__":
                                   limit=5)
 
     print(
-        f'Metadata: total = {results.total}; offset = {results.offset}; limit = {results.limit}; count = {len(results.transactions)}')
+        f'Metadata: total = {results.total}; offset = {results.offset}; limit = {results.limit}; '
+        f'count = {len(results.transactions)}')
     for t in results.transactions:
         print(f'{t.trans_date} {t.net_amount:>9} [{t.account_id}]    "{t.description}"|"{t.comment}"')
+
+    assert len(results) > 1

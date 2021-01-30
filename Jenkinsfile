@@ -36,11 +36,11 @@ pipeline {
 		}
 		stage('build') {
 			steps {
-				echo "Git commit = ${GIT_COMMIT}"
+// 				echo "Git commit = ${GIT_COMMIT}"
 				sh '''
 					docker build -t alunwcom/moanypy:latest -f Dockerfile .
 				'''
-				echo "Version = ${env.VERSION}"
+// 				echo "Version = ${env.VERSION}"
 			}
 		}
 		stage('publish') {

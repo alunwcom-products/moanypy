@@ -17,7 +17,7 @@ pipeline {
 			steps {
 				echo "Git commit = ${GIT_COMMIT}"
 				sh '''
-				    VERSION=$('git describe')
+				    VERSION=$(git describe)
 				    echo "VERSION=${VERSION}"
 					docker build -t alunwcom/moanypy:latest -f Dockerfile .
 				'''

@@ -17,7 +17,7 @@ pipeline {
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [[$class: 'CleanCheckout']],
                     submoduleCfg: [],
-                    userRemoteConfigs: [[url: 'https://github.com/user/repo.git']]
+                    userRemoteConfigs: [[credentialsId: 'alunwcom-mu', url: 'https://github.com/user/repo.git']]
 ])
 			}
 		}
@@ -25,6 +25,8 @@ pipeline {
 			steps {
 				echo "Git commit = ${GIT_COMMIT}"
 				sh '''
+				    git checkout ${BRANCH_NAME}
+
 				    VERSION=$(git describe)
 				    echo "VERSION=${VERSION}"
 					docker build -t alunwcom/moanypy:latest -f Dockerfile .

@@ -13,15 +13,25 @@ pipeline {
 				echo "Using workspace [${WORKSPACE}]"
 				echo "Branch = ${env.BRANCH_NAME}"
 				cleanWs()
-				checkout scm
-				sh '''
-				    git clean -fdx
-				    git checkout ${BRANCH_NAME}
-				    git pull --ff-only
 
-				    VERSION=$(git describe --dirty --always)
-				    echo "VERSION=${VERSION}"
-				'''
+				checkout([$class: 'GitSCM',
+                    branches: [[name: '*/mysql_exp']],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [[$class: 'CleanCheckout']],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[credentialsId: 'alunwcom-mu', url: 'git@github.com:alunwcom/moanypy.git']]
+                ])
+
+
+// 				checkout scm
+// 				sh '''
+// 				    git clean -fdx
+// 				    git checkout ${BRANCH_NAME}
+// 				    git pull --ff-only
+//
+// 				    VERSION=$(git describe --dirty --always)
+// 				    echo "VERSION=${VERSION}"
+// 				'''
 			}
 		}
 		stage('build') {

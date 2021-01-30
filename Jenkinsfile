@@ -5,17 +5,15 @@ pipeline {
 	}
 	options {
 		buildDiscarder(logRotator(numToKeepStr: '7'))
+		skipDefaultCheckout()
 	}
 	stages {
 		stage('init') {
 			steps {
 				echo "Using workspace [${WORKSPACE}]"
 				echo "Branch = ${env.BRANCH_NAME}"
-			}
-		}
-		stage('build') {
-			steps {
-				echo "Git commit = ${GIT_COMMIT}"
+				cleanWs()
+				checkout scm
 				sh '''
 				    git clean -fdx
 				    git checkout ${BRANCH_NAME}
@@ -23,6 +21,13 @@ pipeline {
 
 				    VERSION=$(git describe --dirty --always)
 				    echo "VERSION=${VERSION}"
+				'''
+			}
+		}
+		stage('build') {
+			steps {
+				echo "Git commit = ${GIT_COMMIT}"
+				sh '''
 					docker build -t alunwcom/moanypy:latest -f Dockerfile .
 				'''
 				echo "Version = ${env.VERSION}"

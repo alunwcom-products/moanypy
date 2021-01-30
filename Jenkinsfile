@@ -19,7 +19,7 @@ pipeline {
 				sh '''
 				    git checkout ${BRANCH_NAME}
 
-				    VERSION=$(git describe)
+				    VERSION=$(git describe --dirty --always)
 				    echo "VERSION=${VERSION}"
 					docker build -t alunwcom/moanypy:latest -f Dockerfile .
 				'''

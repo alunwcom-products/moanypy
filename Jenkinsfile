@@ -17,7 +17,9 @@ pipeline {
 			steps {
 				echo "Git commit = ${GIT_COMMIT}"
 				sh '''
+				    git clean -fdx
 				    git checkout ${BRANCH_NAME}
+				    git pull --ff-only
 
 				    VERSION=$(git describe --dirty --always)
 				    echo "VERSION=${VERSION}"

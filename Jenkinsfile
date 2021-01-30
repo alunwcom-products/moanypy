@@ -24,14 +24,14 @@ pipeline {
 
 
 // 				checkout scm
-// 				sh '''
+				sh '''
 // 				    git clean -fdx
 // 				    git checkout ${BRANCH_NAME}
 // 				    git pull --ff-only
-//
-// 				    VERSION=$(git describe --dirty --always)
-// 				    echo "VERSION=${VERSION}"
-// 				'''
+
+				    VERSION=$(git describe --dirty --always)
+				    echo "VERSION=${VERSION}"
+				'''
 			}
 		}
 		stage('build') {

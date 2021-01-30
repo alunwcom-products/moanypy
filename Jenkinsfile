@@ -11,14 +11,6 @@ pipeline {
 			steps {
 				echo "Using workspace [${WORKSPACE}]"
 				echo "Branch = ${env.BRANCH_NAME}"
-
-				checkout([$class: 'GitSCM',
-                    branches: [[name: env.BRANCH_NAME ]],
-                    doGenerateSubmoduleConfigurations: false,
-                    extensions: [[$class: 'CleanCheckout']],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[credentialsId: 'alunwcom-mu', url: 'https://github.com/user/repo.git']]
-])
 			}
 		}
 		stage('build') {

@@ -22,13 +22,7 @@ pipeline {
                     userRemoteConfigs: [[credentialsId: 'alunwcom-mu', url: 'git@github.com:alunwcom/moanypy.git']]
                 ])
 
-
-// 				checkout scm
 				sh '''
-// 				    git clean -fdx
-// 				    git checkout ${BRANCH_NAME}
-// 				    git pull --ff-only
-
 				    VERSION=$(git describe --dirty --always)
 				    echo "VERSION=${VERSION}"
 				'''
